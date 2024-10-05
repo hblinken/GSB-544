@@ -254,9 +254,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-9" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#pd.crosstab(df_titanic["embarked"], df_titanic["passengers"])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
 <section id="using-the-joint-distribution-that-calculated-above-calculate-the-following" class="level2">
 <h2 class="anchored" data-anchor-id="using-the-joint-distribution-that-calculated-above-calculate-the-following">2. Using the joint distribution that calculated above, calculate the following:</h2>
@@ -269,8 +266,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>What proportion of 3rd class passengers embarked at Southampton?</li>
 <li>What proportion of Southampton passengers were in 3rd class?</li>
 </ul>
-<div id="cell-11" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pd.crosstab(titanic_class[<span class="st">"embarked"</span>], titanic_class[<span class="st">"class"</span>], normalize<span class="op">=</span><span class="st">"index"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-10" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pd.crosstab(titanic_class[<span class="st">"embarked"</span>], titanic_class[<span class="st">"class"</span>], normalize<span class="op">=</span><span class="st">"index"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#class given where they embarked </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <div>
 
@@ -321,8 +319,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-12" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pd.crosstab(titanic_class[<span class="st">"embarked"</span>], titanic_class[<span class="st">"class"</span>], normalize<span class="op">=</span><span class="st">"columns"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-11" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pd.crosstab(titanic_class[<span class="st">"embarked"</span>], titanic_class[<span class="st">"class"</span>], normalize<span class="op">=</span><span class="st">"columns"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># where they embarked given their class </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 
@@ -373,22 +372,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>.54 of 3rd class passengers embark from Southhampton</p>
-<p>.69 passengers from Southhampton were in 3rd class</p>
+<p>.69 of 3rd class passengers embark from Southhampton</p>
+<p>.54 passengers from Southhampton were in 3rd class</p>
 </section>
 <section id="make-a-visualization-showing-the-distribution-of-a-passengers-class-given-where-they-embarked." class="level2">
 <h2 class="anchored" data-anchor-id="make-a-visualization-showing-the-distribution-of-a-passengers-class-given-where-they-embarked.">3. Make a visualization showing the distribution of a passenger’s class, given where they embarked.</h2>
 <p>Discuss the pros and cons of using this visualization versus the distributions you calculated before, to answer the previous questions.</p>
-<div id="cell-16" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pd.crosstab(titanic_class[<span class="st">"embarked"</span>], titanic_class[<span class="st">"class"</span>], normalize<span class="op">=</span><span class="st">"index"</span>).plot(kind<span class="op">=</span> <span class="st">"bar"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-15" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pd.crosstab(titanic_class[<span class="st">"embarked"</span>], titanic_class[<span class="st">"class"</span>], normalize<span class="op">=</span><span class="st">"index"</span>).plot(kind<span class="op">=</span> <span class="st">"bar"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Titanic_Wrangling_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Titanic_Wrangling_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>This plot is nice since when you set it up the right way with the given information, someone can easily find the correct bar. However, it does not give the exact distribution numbers. This could probably be added though.</p>
 </section>
 
 </main>
