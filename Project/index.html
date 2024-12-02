@@ -1,0 +1,2138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>544 Project</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">544 Project</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="cell-2" class="cell" data-execution_count="74">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> KNeighborsClassifier</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeClassifier</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_selector, ColumnTransformer</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, OneHotEncoder, PolynomialFeatures</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression, LogisticRegression</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> KNeighborsRegressor</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeRegressor</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score, roc_auc_score, classification_report, confusion_matrix, mean_squared_error</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score, GridSearchCV, StratifiedKFold</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.discriminant_analysis <span class="im">import</span> LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.exceptions <span class="im">import</span> FitFailedWarning</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> SVC</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.tree <span class="im">import</span> plot_tree</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression, Ridge, Lasso, ElasticNet </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> r2_score</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> KFold</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="extracting-weather-data-from-the-web" class="level2">
+<h2 class="anchored" data-anchor-id="extracting-weather-data-from-the-web">Extracting Weather Data from the web</h2>
+<div id="cell-4" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>njweath <span class="op">=</span> requests.get(<span class="st">"https://climate.rutgers.edu/stateclim_v1/nclimdiv/index.php?stn=NJ00&amp;elem=pcpn"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>njweather <span class="op">=</span> BeautifulSoup(njweath.content, <span class="st">"html.parser"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-5" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> njweather.find_all(<span class="st">"tr"</span>):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    year_tag <span class="op">=</span> row.find(<span class="st">"th"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    cells <span class="op">=</span> row.find_all(<span class="st">"td"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> year_tag <span class="kw">and</span> <span class="bu">len</span>(cells) <span class="op">&gt;=</span> <span class="dv">14</span>:</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        year <span class="op">=</span> year_tag.get_text(strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> get_cell_text(cell):</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>          span <span class="op">=</span> cell.find(<span class="st">"span"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>          text <span class="op">=</span> span.get_text(strip<span class="op">=</span><span class="va">True</span>) <span class="cf">if</span> span <span class="cf">else</span> cell.get_text(strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>          <span class="cf">return</span> text.replace(<span class="st">'*'</span>, <span class="st">''</span>)  <span class="co"># Remove any asterisks</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        January <span class="op">=</span> get_cell_text(cells[<span class="dv">1</span>])</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        February <span class="op">=</span> get_cell_text(cells[<span class="dv">2</span>])</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        March <span class="op">=</span> get_cell_text(cells[<span class="dv">3</span>])</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        April <span class="op">=</span> get_cell_text(cells[<span class="dv">4</span>])</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        May <span class="op">=</span> get_cell_text(cells[<span class="dv">5</span>])</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        June <span class="op">=</span> get_cell_text(cells[<span class="dv">6</span>])</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        July <span class="op">=</span> get_cell_text(cells[<span class="dv">7</span>])</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        August <span class="op">=</span> get_cell_text(cells[<span class="dv">8</span>])</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        September <span class="op">=</span> get_cell_text(cells[<span class="dv">9</span>])</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        October <span class="op">=</span> get_cell_text(cells[<span class="dv">10</span>])</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        November <span class="op">=</span> get_cell_text(cells[<span class="dv">11</span>])</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        December <span class="op">=</span> get_cell_text(cells[<span class="dv">12</span>])</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        rows.append({</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Year"</span>: year,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>            <span class="st">"January"</span>: January,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>            <span class="st">"February"</span>: February,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>            <span class="st">"March"</span>: March,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">"April"</span>: April,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"May"</span>: May,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">"June"</span>: June,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">"July"</span>: July,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>            <span class="st">"August"</span>: August,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">"September"</span>: September,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">"October"</span>: October,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">"November"</span>: November,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">"December"</span>: December</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>nj <span class="op">=</span> pd.DataFrame(rows)</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>nj.tail(<span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">January</th>
+<th data-quarto-table-cell-role="th">February</th>
+<th data-quarto-table-cell-role="th">March</th>
+<th data-quarto-table-cell-role="th">April</th>
+<th data-quarto-table-cell-role="th">May</th>
+<th data-quarto-table-cell-role="th">June</th>
+<th data-quarto-table-cell-role="th">July</th>
+<th data-quarto-table-cell-role="th">August</th>
+<th data-quarto-table-cell-role="th">September</th>
+<th data-quarto-table-cell-role="th">October</th>
+<th data-quarto-table-cell-role="th">November</th>
+<th data-quarto-table-cell-role="th">December</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">116</td>
+<td>2011</td>
+<td>3.33</td>
+<td>3.07</td>
+<td>5.55</td>
+<td>5.67</td>
+<td>3.77</td>
+<td>3.43</td>
+<td>4.11</td>
+<td>15.67</td>
+<td>7.12</td>
+<td>4.19</td>
+<td>3.83</td>
+<td>4.21</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">117</td>
+<td>2012</td>
+<td>2.78</td>
+<td>1.33</td>
+<td>1.65</td>
+<td>2.87</td>
+<td>4.27</td>
+<td>4.30</td>
+<td>3.43</td>
+<td>4.62</td>
+<td>4.45</td>
+<td>5.43</td>
+<td>1.30</td>
+<td>5.56</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">118</td>
+<td>2013</td>
+<td>3.00</td>
+<td>2.89</td>
+<td>2.89</td>
+<td>2.60</td>
+<td>3.82</td>
+<td>9.49</td>
+<td>5.27</td>
+<td>4.67</td>
+<td>2.11</td>
+<td>2.01</td>
+<td>2.89</td>
+<td>4.74</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">119</td>
+<td>2014</td>
+<td>3.12</td>
+<td>4.96</td>
+<td>3.97</td>
+<td>4.42</td>
+<td>4.72</td>
+<td>3.32</td>
+<td>5.23</td>
+<td>4.08</td>
+<td>2.50</td>
+<td>3.64</td>
+<td>4.34</td>
+<td>4.65</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">120</td>
+<td>2015</td>
+<td>4.43</td>
+<td>2.18</td>
+<td>4.55</td>
+<td>2.67</td>
+<td>1.21</td>
+<td>8.12</td>
+<td>3.68</td>
+<td>2.26</td>
+<td>3.60</td>
+<td>4.02</td>
+<td>2.30</td>
+<td>4.84</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">121</td>
+<td>2016</td>
+<td>3.19</td>
+<td>4.08</td>
+<td>1.87</td>
+<td>2.26</td>
+<td>4.79</td>
+<td>2.40</td>
+<td>6.97</td>
+<td>2.08</td>
+<td>3.45</td>
+<td>2.80</td>
+<td>2.43</td>
+<td>3.27</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">122</td>
+<td>2017</td>
+<td>3.71</td>
+<td>1.64</td>
+<td>4.06</td>
+<td>3.82</td>
+<td>6.51</td>
+<td>3.32</td>
+<td>6.29</td>
+<td>5.17</td>
+<td>2.27</td>
+<td>4.97</td>
+<td>1.70</td>
+<td>1.46</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">123</td>
+<td>2018</td>
+<td>2.72</td>
+<td>6.08</td>
+<td>4.64</td>
+<td>4.17</td>
+<td>5.80</td>
+<td>3.30</td>
+<td>5.91</td>
+<td>5.56</td>
+<td>7.57</td>
+<td>4.46</td>
+<td>8.65</td>
+<td>5.90</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">124</td>
+<td>2019</td>
+<td>4.49</td>
+<td>3.26</td>
+<td>3.84</td>
+<td>3.97</td>
+<td>6.75</td>
+<td>5.15</td>
+<td>6.14</td>
+<td>3.73</td>
+<td>1.25</td>
+<td>5.71</td>
+<td>1.94</td>
+<td>5.32</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">125</td>
+<td>2020</td>
+<td>2.29</td>
+<td>2.79</td>
+<td>3.61</td>
+<td>3.98</td>
+<td>2.47</td>
+<td>3.05</td>
+<td>6.69</td>
+<td>6.09</td>
+<td>4.41</td>
+<td>5.03</td>
+<td>4.09</td>
+<td>5.35</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">126</td>
+<td>2021</td>
+<td>1.86</td>
+<td>4.73</td>
+<td>3.84</td>
+<td>2.35</td>
+<td>3.84</td>
+<td>3.37</td>
+<td>7.62</td>
+<td>6.59</td>
+<td>6.34</td>
+<td>5.06</td>
+<td>1.01</td>
+<td>1.26</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">127</td>
+<td>2022</td>
+<td>3.37</td>
+<td>2.71</td>
+<td>2.64</td>
+<td>5.04</td>
+<td>5.28</td>
+<td>3.39</td>
+<td>2.05</td>
+<td>2.34</td>
+<td>3.11</td>
+<td>6.46</td>
+<td>2.88</td>
+<td>4.78</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">128</td>
+<td>2023</td>
+<td>3.67</td>
+<td>1.52</td>
+<td>2.57</td>
+<td>5.60</td>
+<td>1.99</td>
+<td>3.91</td>
+<td>6.36</td>
+<td>4.13</td>
+<td>7.75</td>
+<td>2.00</td>
+<td>2.70</td>
+<td>8.34</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">129</td>
+<td>2024</td>
+<td>6.20</td>
+<td>1.76</td>
+<td>7.77</td>
+<td>4.12</td>
+<td>3.08</td>
+<td>2.48</td>
+<td>3.89</td>
+<td>6.09</td>
+<td>0.78</td>
+<td>0.02</td>
+<td>M</td>
+<td>M</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">130</td>
+<td>30yr?Normal</td>
+<td>3.49</td>
+<td>2.86</td>
+<td>4.20</td>
+<td>3.70</td>
+<td>3.75</td>
+<td>4.30</td>
+<td>4.71</td>
+<td>4.57</td>
+<td>4.16</td>
+<td>4.19</td>
+<td>3.36</td>
+<td>4.27</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">131</td>
+<td>POR?Mean</td>
+<td>3.45</td>
+<td>3.09</td>
+<td>3.91</td>
+<td>3.75</td>
+<td>3.77</td>
+<td>3.85</td>
+<td>4.62</td>
+<td>4.61</td>
+<td>3.77</td>
+<td>3.54</td>
+<td>3.40</td>
+<td>3.80</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">132</td>
+<td>Median</td>
+<td>3.22</td>
+<td>2.84</td>
+<td>3.76</td>
+<td>3.62</td>
+<td>3.66</td>
+<td>3.48</td>
+<td>4.48</td>
+<td>4.15</td>
+<td>3.44</td>
+<td>3.27</td>
+<td>3.10</td>
+<td>3.68</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">133</td>
+<td>Min</td>
+<td>0.54</td>
+<td>0.66</td>
+<td>0.82</td>
+<td>0.96</td>
+<td>0.64</td>
+<td>0.32</td>
+<td>1.27</td>
+<td>0.98</td>
+<td>0.29</td>
+<td>0.02</td>
+<td>0.54</td>
+<td>0.40</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">134</td>
+<td>Max</td>
+<td>9.12</td>
+<td>6.88</td>
+<td>8.66</td>
+<td>9.00</td>
+<td>8.43</td>
+<td>9.49</td>
+<td>11.37</td>
+<td>15.67</td>
+<td>9.50</td>
+<td>11.99</td>
+<td>9.01</td>
+<td>8.34</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">135</td>
+<td>Count</td>
+<td>130</td>
+<td>130</td>
+<td>130</td>
+<td>130</td>
+<td>130</td>
+<td>130</td>
+<td>130</td>
+<td>130</td>
+<td>130</td>
+<td>130</td>
+<td>129</td>
+<td>129</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-6" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nj_clean<span class="op">=</span> nj.iloc[:<span class="op">-</span><span class="dv">6</span>]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>nj_clean.tail(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">January</th>
+<th data-quarto-table-cell-role="th">February</th>
+<th data-quarto-table-cell-role="th">March</th>
+<th data-quarto-table-cell-role="th">April</th>
+<th data-quarto-table-cell-role="th">May</th>
+<th data-quarto-table-cell-role="th">June</th>
+<th data-quarto-table-cell-role="th">July</th>
+<th data-quarto-table-cell-role="th">August</th>
+<th data-quarto-table-cell-role="th">September</th>
+<th data-quarto-table-cell-role="th">October</th>
+<th data-quarto-table-cell-role="th">November</th>
+<th data-quarto-table-cell-role="th">December</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">120</td>
+<td>2015</td>
+<td>4.43</td>
+<td>2.18</td>
+<td>4.55</td>
+<td>2.67</td>
+<td>1.21</td>
+<td>8.12</td>
+<td>3.68</td>
+<td>2.26</td>
+<td>3.60</td>
+<td>4.02</td>
+<td>2.30</td>
+<td>4.84</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">121</td>
+<td>2016</td>
+<td>3.19</td>
+<td>4.08</td>
+<td>1.87</td>
+<td>2.26</td>
+<td>4.79</td>
+<td>2.40</td>
+<td>6.97</td>
+<td>2.08</td>
+<td>3.45</td>
+<td>2.80</td>
+<td>2.43</td>
+<td>3.27</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">122</td>
+<td>2017</td>
+<td>3.71</td>
+<td>1.64</td>
+<td>4.06</td>
+<td>3.82</td>
+<td>6.51</td>
+<td>3.32</td>
+<td>6.29</td>
+<td>5.17</td>
+<td>2.27</td>
+<td>4.97</td>
+<td>1.70</td>
+<td>1.46</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">123</td>
+<td>2018</td>
+<td>2.72</td>
+<td>6.08</td>
+<td>4.64</td>
+<td>4.17</td>
+<td>5.80</td>
+<td>3.30</td>
+<td>5.91</td>
+<td>5.56</td>
+<td>7.57</td>
+<td>4.46</td>
+<td>8.65</td>
+<td>5.90</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">124</td>
+<td>2019</td>
+<td>4.49</td>
+<td>3.26</td>
+<td>3.84</td>
+<td>3.97</td>
+<td>6.75</td>
+<td>5.15</td>
+<td>6.14</td>
+<td>3.73</td>
+<td>1.25</td>
+<td>5.71</td>
+<td>1.94</td>
+<td>5.32</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">125</td>
+<td>2020</td>
+<td>2.29</td>
+<td>2.79</td>
+<td>3.61</td>
+<td>3.98</td>
+<td>2.47</td>
+<td>3.05</td>
+<td>6.69</td>
+<td>6.09</td>
+<td>4.41</td>
+<td>5.03</td>
+<td>4.09</td>
+<td>5.35</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">126</td>
+<td>2021</td>
+<td>1.86</td>
+<td>4.73</td>
+<td>3.84</td>
+<td>2.35</td>
+<td>3.84</td>
+<td>3.37</td>
+<td>7.62</td>
+<td>6.59</td>
+<td>6.34</td>
+<td>5.06</td>
+<td>1.01</td>
+<td>1.26</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">127</td>
+<td>2022</td>
+<td>3.37</td>
+<td>2.71</td>
+<td>2.64</td>
+<td>5.04</td>
+<td>5.28</td>
+<td>3.39</td>
+<td>2.05</td>
+<td>2.34</td>
+<td>3.11</td>
+<td>6.46</td>
+<td>2.88</td>
+<td>4.78</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">128</td>
+<td>2023</td>
+<td>3.67</td>
+<td>1.52</td>
+<td>2.57</td>
+<td>5.60</td>
+<td>1.99</td>
+<td>3.91</td>
+<td>6.36</td>
+<td>4.13</td>
+<td>7.75</td>
+<td>2.00</td>
+<td>2.70</td>
+<td>8.34</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">129</td>
+<td>2024</td>
+<td>6.20</td>
+<td>1.76</td>
+<td>7.77</td>
+<td>4.12</td>
+<td>3.08</td>
+<td>2.48</td>
+<td>3.89</td>
+<td>6.09</td>
+<td>0.78</td>
+<td>0.02</td>
+<td>M</td>
+<td>M</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-7" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>nj.replace(<span class="st">"M"</span>, np.nan, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-8" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>nj_use <span class="op">=</span> nj_clean.iloc[<span class="dv">123</span>:<span class="dv">126</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>nj_use</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">January</th>
+<th data-quarto-table-cell-role="th">February</th>
+<th data-quarto-table-cell-role="th">March</th>
+<th data-quarto-table-cell-role="th">April</th>
+<th data-quarto-table-cell-role="th">May</th>
+<th data-quarto-table-cell-role="th">June</th>
+<th data-quarto-table-cell-role="th">July</th>
+<th data-quarto-table-cell-role="th">August</th>
+<th data-quarto-table-cell-role="th">September</th>
+<th data-quarto-table-cell-role="th">October</th>
+<th data-quarto-table-cell-role="th">November</th>
+<th data-quarto-table-cell-role="th">December</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">123</td>
+<td>2018</td>
+<td>2.72</td>
+<td>6.08</td>
+<td>4.64</td>
+<td>4.17</td>
+<td>5.80</td>
+<td>3.30</td>
+<td>5.91</td>
+<td>5.56</td>
+<td>7.57</td>
+<td>4.46</td>
+<td>8.65</td>
+<td>5.90</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">124</td>
+<td>2019</td>
+<td>4.49</td>
+<td>3.26</td>
+<td>3.84</td>
+<td>3.97</td>
+<td>6.75</td>
+<td>5.15</td>
+<td>6.14</td>
+<td>3.73</td>
+<td>1.25</td>
+<td>5.71</td>
+<td>1.94</td>
+<td>5.32</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">125</td>
+<td>2020</td>
+<td>2.29</td>
+<td>2.79</td>
+<td>3.61</td>
+<td>3.98</td>
+<td>2.47</td>
+<td>3.05</td>
+<td>6.69</td>
+<td>6.09</td>
+<td>4.41</td>
+<td>5.03</td>
+<td>4.09</td>
+<td>5.35</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-9" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>nj_rain <span class="op">=</span> nj_use.melt(id_vars<span class="op">=</span>[<span class="st">'Year'</span>], var_name<span class="op">=</span><span class="st">'Month'</span>, value_name<span class="op">=</span><span class="st">'Rainfall'</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>nj_rain[<span class="st">'Year'</span>]<span class="op">=</span>nj_rain[<span class="st">'Year'</span>].astype(<span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="importing-and-cleaning-the-trains-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="importing-and-cleaning-the-trains-datasets">Importing and Cleaning the Trains Datasets</h2>
+<div id="cell-11" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace with your CSV directory path</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>trains_folder <span class="op">=</span> <span class="st">"C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains/*.csv"</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load all CSV files into a dictionary</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>csv_files <span class="op">=</span> glob.glob(trains_folder)  <span class="co"># This finds all CSV files in the folder</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>dataframes <span class="op">=</span> {<span class="bu">file</span>: pd.read_csv(<span class="bu">file</span>) <span class="cf">for</span> <span class="bu">file</span> <span class="kw">in</span> csv_files}</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Print or process each DataFrame</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">file</span>, df <span class="kw">in</span> dataframes.items():</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Data from </span><span class="sc">{</span><span class="bu">file</span><span class="sc">}</span><span class="ss">:</span><span class="ch">\n</span><span class="ss">"</span>, df.head())</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2018_03.csv:
+          date train_id  stop_sequence                   from  from_id  \
+0  2018-03-01     3805            1.0  New York Penn Station      105   
+1  2018-03-01     3805            2.0  New York Penn Station      105   
+2  2018-03-01     3805            3.0     Secaucus Upper Lvl    38187   
+3  2018-03-01     3805            4.0    Newark Penn Station      107   
+4  2018-03-01     3805            5.0         Newark Airport    37953   
+
+                      to  to_id       scheduled_time          actual_time  \
+0  New York Penn Station    105  2018-03-02 01:22:00  2018-03-02 01:21:05   
+1     Secaucus Upper Lvl  38187  2018-03-02 01:31:00  2018-03-02 01:31:08   
+2    Newark Penn Station    107  2018-03-02 01:40:00  2018-03-02 01:40:07   
+3         Newark Airport  37953  2018-03-02 01:45:00  2018-03-02 01:45:10   
+4        North Elizabeth    109  2018-03-02 01:49:00  2018-03-02 01:49:10   
+
+   delay_minutes    status              line        type  
+0       0.000000  departed  Northeast Corrdr  NJ Transit  
+1       0.133333  departed  Northeast Corrdr  NJ Transit  
+2       0.116667  departed  Northeast Corrdr  NJ Transit  
+3       0.166667  departed  Northeast Corrdr  NJ Transit  
+4       0.166667  departed  Northeast Corrdr  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2018_04.csv:
+          date train_id  stop_sequence                   from  from_id  \
+0  2018-04-01     7837            1.0  New York Penn Station      105   
+1  2018-04-01     7837            2.0  New York Penn Station      105   
+2  2018-04-01     7837            3.0     Secaucus Upper Lvl    38187   
+3  2018-04-01     7837            4.0    Newark Penn Station      107   
+4  2018-04-01     7837            5.0         Newark Airport    37953   
+
+                      to  to_id       scheduled_time          actual_time  \
+0  New York Penn Station    105  2018-04-01 11:14:00  2018-04-01 11:14:10   
+1     Secaucus Upper Lvl  38187  2018-04-01 11:23:00  2018-04-01 11:26:05   
+2    Newark Penn Station    107  2018-04-01 11:32:00  2018-04-01 11:36:07   
+3         Newark Airport  37953  2018-04-01 11:37:00  2018-04-01 11:40:08   
+4              Elizabeth     41  2018-04-01 11:42:00  2018-04-01 11:46:04   
+
+   delay_minutes    status              line        type  
+0       0.166667  departed  Northeast Corrdr  NJ Transit  
+1       3.083333  departed  Northeast Corrdr  NJ Transit  
+2       4.116667  departed  Northeast Corrdr  NJ Transit  
+3       3.133333  departed  Northeast Corrdr  NJ Transit  
+4       4.066667  departed  Northeast Corrdr  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2018_05.csv:
+          date train_id  stop_sequence                 from  from_id  \
+0  2018-05-01     3926            1.0              Trenton    148.0   
+1  2018-05-01     3926            2.0              Trenton    148.0   
+2  2018-05-01     3926            3.0             Hamilton  32905.0   
+3  2018-05-01     3926            4.0   Princeton Junction    125.0   
+4  2018-05-01     3926            5.0  Newark Penn Station    107.0   
+
+                    to    to_id       scheduled_time          actual_time  \
+0              Trenton    148.0  2018-05-01 07:31:00  2018-05-01 07:35:13   
+1             Hamilton  32905.0  2018-05-01 07:38:00  2018-05-01 07:40:10   
+2   Princeton Junction    125.0  2018-05-01 07:45:00  2018-05-01 07:46:09   
+3  Newark Penn Station    107.0  2018-05-01 08:22:00  2018-05-01 08:24:02   
+4   Secaucus Upper Lvl  38187.0  2018-05-01 08:30:00  2018-05-01 08:35:12   
+
+   delay_minutes    status              line        type  
+0       4.216667  departed  Northeast Corrdr  NJ Transit  
+1       2.166667  departed  Northeast Corrdr  NJ Transit  
+2       1.150000  departed  Northeast Corrdr  NJ Transit  
+3       2.033333  departed  Northeast Corrdr  NJ Transit  
+4       5.200000  departed  Northeast Corrdr  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2018_06.csv:
+          date train_id  stop_sequence          from  from_id            to  \
+0  2018-06-01     4635            1.0  Philadelphia      1.0  Philadelphia   
+1  2018-06-01     4635            2.0  Philadelphia      1.0    Pennsauken   
+2  2018-06-01     4635            3.0    Pennsauken  43298.0   Cherry Hill   
+3  2018-06-01     4635            4.0   Cherry Hill     28.0    Lindenwold   
+4  2018-06-01     4635            5.0    Lindenwold     71.0          Atco   
+
+     to_id       scheduled_time          actual_time  delay_minutes    status  \
+0      1.0  2018-06-01 17:46:00  2018-06-01 17:46:27       0.450000  departed   
+1  43298.0  2018-06-01 18:07:00  2018-06-01 18:12:40       5.666667  departed   
+2     28.0  2018-06-01 18:14:00  2018-06-01 18:20:38       6.633333  departed   
+3     71.0  2018-06-01 18:25:00  2018-06-01 18:30:29       5.483333  departed   
+4      9.0  2018-06-01 18:32:00  2018-06-01 18:37:47       5.783333  departed   
+
+             line        type  
+0  Atl. City Line  NJ Transit  
+1  Atl. City Line  NJ Transit  
+2  Atl. City Line  NJ Transit  
+3  Atl. City Line  NJ Transit  
+4  Atl. City Line  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2018_07.csv:
+          date train_id  stop_sequence           from  from_id             to  \
+0  2018-07-01     0724            1.0      Gladstone     49.0      Gladstone   
+1  2018-07-01     0724            2.0      Gladstone     49.0        Peapack   
+2  2018-07-01     0724            3.0        Peapack    117.0      Far Hills   
+3  2018-07-01     0724            4.0      Far Hills     45.0  Bernardsville   
+4  2018-07-01     0724            5.0  Bernardsville     18.0  Basking Ridge   
+
+   to_id       scheduled_time          actual_time  delay_minutes    status  \
+0   49.0  2018-07-01 12:52:00  2018-07-01 12:52:05       0.083333  departed   
+1  117.0  2018-07-01 12:55:00  2018-07-01 12:56:09       1.150000  departed   
+2   45.0  2018-07-01 12:59:00  2018-07-01 13:00:15       1.250000  departed   
+3   18.0  2018-07-01 13:05:00  2018-07-01 13:07:04       2.066667  departed   
+4   12.0  2018-07-01 13:08:00  2018-07-01 13:11:05       3.083333  departed   
+
+               line        type  
+0  Gladstone Branch  NJ Transit  
+1  Gladstone Branch  NJ Transit  
+2  Gladstone Branch  NJ Transit  
+3  Gladstone Branch  NJ Transit  
+4  Gladstone Branch  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2018_08.csv:
+          date train_id  stop_sequence          from  from_id            to  \
+0  2018-08-01     4631            1.0  Philadelphia      1.0  Philadelphia   
+1  2018-08-01     4631            2.0  Philadelphia      1.0    Pennsauken   
+2  2018-08-01     4631            3.0    Pennsauken  43298.0   Cherry Hill   
+3  2018-08-01     4631            4.0   Cherry Hill     28.0    Lindenwold   
+4  2018-08-01     4631            5.0    Lindenwold     71.0          Atco   
+
+     to_id       scheduled_time          actual_time  delay_minutes    status  \
+0      1.0  2018-08-01 15:19:00  2018-08-01 15:19:14       0.233333  departed   
+1  43298.0  2018-08-01 15:40:00  2018-08-01 15:40:18       0.300000  departed   
+2     28.0  2018-08-01 15:47:00  2018-08-01 15:48:22       1.366667  departed   
+3     71.0  2018-08-01 15:58:00  2018-08-01 16:03:15       5.250000  departed   
+4      9.0  2018-08-01 16:05:00  2018-08-01 16:10:24       5.400000  departed   
+
+             line        type  
+0  Atl. City Line  NJ Transit  
+1  Atl. City Line  NJ Transit  
+2  Atl. City Line  NJ Transit  
+3  Atl. City Line  NJ Transit  
+4  Atl. City Line  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2018_09.csv:
+          date train_id  stop_sequence           from  from_id             to  \
+0  2018-09-01     0720            1.0      Gladstone     49.0      Gladstone   
+1  2018-09-01     0720            2.0      Gladstone     49.0        Peapack   
+2  2018-09-01     0720            3.0        Peapack    117.0      Far Hills   
+3  2018-09-01     0720            4.0      Far Hills     45.0  Bernardsville   
+4  2018-09-01     0720            5.0  Bernardsville     18.0  Basking Ridge   
+
+   to_id       scheduled_time          actual_time  delay_minutes    status  \
+0   49.0  2018-09-01 10:52:00  2018-09-01 10:52:06       0.100000  departed   
+1  117.0  2018-09-01 10:55:00  2018-09-01 10:56:10       1.166667  departed   
+2   45.0  2018-09-01 10:59:00  2018-09-01 11:01:31       2.516667  departed   
+3   18.0  2018-09-01 11:05:00  2018-09-01 11:07:02       2.033333  departed   
+4   12.0  2018-09-01 11:08:00  2018-09-01 11:10:15       2.250000  departed   
+
+               line        type  
+0  Gladstone Branch  NJ Transit  
+1  Gladstone Branch  NJ Transit  
+2  Gladstone Branch  NJ Transit  
+3  Gladstone Branch  NJ Transit  
+4  Gladstone Branch  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2018_10.csv:
+          date train_id  stop_sequence                   from  from_id  \
+0  2018-10-01     3701            1.0  New York Penn Station    105.0   
+1  2018-10-01     3701            2.0  New York Penn Station    105.0   
+2  2018-10-01     3701            3.0     Secaucus Upper Lvl  38187.0   
+3  2018-10-01     3701            4.0    Newark Penn Station    107.0   
+4  2018-10-01     3701            5.0         Newark Airport  37953.0   
+
+                      to    to_id       scheduled_time          actual_time  \
+0  New York Penn Station    105.0  2018-10-01 05:41:00  2018-10-01 05:40:04   
+1     Secaucus Upper Lvl  38187.0  2018-10-01 05:50:00  2018-10-01 05:51:23   
+2    Newark Penn Station    107.0  2018-10-01 05:58:00  2018-10-01 05:59:04   
+3         Newark Airport  37953.0  2018-10-01 06:03:00  2018-10-01 06:04:10   
+4              Metropark     83.0  2018-10-01 06:17:00  2018-10-01 06:17:02   
+
+   delay_minutes    status              line        type  
+0       0.000000  departed  Northeast Corrdr  NJ Transit  
+1       1.383333  departed  Northeast Corrdr  NJ Transit  
+2       1.066667  departed  Northeast Corrdr  NJ Transit  
+3       1.166667  departed  Northeast Corrdr  NJ Transit  
+4       0.033333  departed  Northeast Corrdr  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2018_11.csv:
+          date train_id  stop_sequence           from  from_id             to  \
+0  2018-11-01     3244            1.0    Long Branch     74.0    Long Branch   
+1  2018-11-01     3244            2.0    Long Branch     74.0  Little Silver   
+2  2018-11-01     3244            3.0  Little Silver     73.0       Red Bank   
+3  2018-11-01     3244            4.0       Red Bank    130.0  Middletown NJ   
+4  2018-11-01     3244            5.0  Middletown NJ     85.0         Hazlet   
+
+   to_id       scheduled_time          actual_time  delay_minutes    status  \
+0   74.0  2018-11-01 11:54:00  2018-11-01 11:53:36       0.000000  departed   
+1   73.0  2018-11-01 12:02:00  2018-11-01 12:02:19       0.316667  departed   
+2  130.0  2018-11-01 12:06:00  2018-11-01 12:09:11       3.183333  departed   
+3   85.0  2018-11-01 12:12:00  2018-11-01 12:13:18       1.300000  departed   
+4   59.0  2018-11-01 12:18:00  2018-11-01 12:20:03       2.050000  departed   
+
+              line        type  
+0  No Jersey Coast  NJ Transit  
+1  No Jersey Coast  NJ Transit  
+2  No Jersey Coast  NJ Transit  
+3  No Jersey Coast  NJ Transit  
+4  No Jersey Coast  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2018_12.csv:
+          date train_id  stop_sequence                 from  from_id  \
+0  2018-12-01     1822            1.0             Waldwick      151   
+1  2018-12-01     1822            2.0             Waldwick      151   
+2  2018-12-01     1822            3.0            Ho-Ho-Kus       64   
+3  2018-12-01     1822            4.0            Ridgewood      131   
+4  2018-12-01     1822            5.0  Glen Rock Main Line       52   
+
+                    to  to_id       scheduled_time          actual_time  \
+0             Waldwick    151  2018-12-01 16:33:00  2018-12-01 16:33:04   
+1            Ho-Ho-Kus     64  2018-12-01 16:36:00  2018-12-01 16:40:04   
+2            Ridgewood    131  2018-12-01 16:39:00  2018-12-01 16:43:17   
+3  Glen Rock Main Line     52  2018-12-01 16:43:00  2018-12-01 16:47:25   
+4            Hawthorne     58  2018-12-01 16:46:00  2018-12-01 16:51:07   
+
+   delay_minutes    status       line        type  
+0       0.066667  departed  Main Line  NJ Transit  
+1       4.066667  departed  Main Line  NJ Transit  
+2       4.283333  departed  Main Line  NJ Transit  
+3       4.416667  departed  Main Line  NJ Transit  
+4       5.116667  departed  Main Line  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_01.csv:
+          date train_id  stop_sequence                   from  from_id  \
+0  2019-01-01    .8905            NaN  New York Penn Station      105   
+1  2019-01-01    .8905            NaN  New York Penn Station      105   
+2  2019-01-01    A2228            NaN           Philadelphia        1   
+3  2019-01-01    A2228            NaN           Philadelphia        1   
+4  2019-01-01    A2228            NaN              Metropark       83   
+
+                      to  to_id scheduled_time          actual_time  \
+0  New York Penn Station    105            NaN  2019-01-01 02:20:04   
+1     Secaucus Upper Lvl  38187            NaN  2019-01-01 02:20:04   
+2           Philadelphia      1            NaN  2019-01-01 21:40:06   
+3              Metropark     83            NaN  2019-01-01 22:24:07   
+4    Newark Penn Station    107            NaN  2019-01-01 22:38:19   
+
+   delay_minutes     status             line    type  
+0            NaN  cancelled  Morristown Line  Amtrak  
+1            NaN   departed  Morristown Line  Amtrak  
+2            NaN   departed    ACELA EXPRESS  Amtrak  
+3            NaN   departed    ACELA EXPRESS  Amtrak  
+4            NaN   departed    ACELA EXPRESS  Amtrak  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_02.csv:
+          date train_id  stop_sequence             from  from_id  \
+0  2019-02-01     1160            1.0          Suffern    144.0   
+1  2019-02-01     1160            2.0          Suffern    144.0   
+2  2019-02-01     1160            3.0           Mahwah     78.0   
+3  2019-02-01     1160            4.0  Ramsey Route 17  38417.0   
+4  2019-02-01     1160            5.0   Ramsey Main St    128.0   
+
+                to    to_id       scheduled_time          actual_time  \
+0          Suffern    144.0  2019-02-01 08:35:00  2019-02-01 08:35:29   
+1           Mahwah     78.0  2019-02-01 08:38:00  2019-02-01 08:39:19   
+2  Ramsey Route 17  38417.0  2019-02-01 08:41:00  2019-02-01 08:42:35   
+3   Ramsey Main St    128.0  2019-02-01 08:44:00  2019-02-01 08:45:23   
+4        Allendale      3.0  2019-02-01 08:47:00  2019-02-01 08:48:15   
+
+   delay_minutes    status              line        type  
+0       0.483333  departed  Bergen Co. Line   NJ Transit  
+1       1.316667  departed  Bergen Co. Line   NJ Transit  
+2       1.583333  departed  Bergen Co. Line   NJ Transit  
+3       1.383333  departed  Bergen Co. Line   NJ Transit  
+4       1.250000  departed  Bergen Co. Line   NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_03.csv:
+          date train_id  stop_sequence                 from  from_id  \
+0  2019-03-01     5415            1.0  Newark Penn Station    107.0   
+1  2019-03-01     5415            2.0  Newark Penn Station    107.0   
+2  2019-03-01     5415            3.0                Union  38105.0   
+3  2019-03-01     5415            4.0         Roselle Park     31.0   
+4  2019-03-01     5415            5.0             Cranford     32.0   
+
+                    to    to_id       scheduled_time          actual_time  \
+0  Newark Penn Station    107.0  2019-03-01 09:06:00  2019-03-01 09:05:36   
+1                Union  38105.0  2019-03-01 09:15:00  2019-03-01 09:16:05   
+2         Roselle Park     31.0  2019-03-01 09:18:00  2019-03-01 09:21:29   
+3             Cranford     32.0  2019-03-01 09:23:00  2019-03-01 09:26:01   
+4            Westfield    155.0  2019-03-01 09:27:00  2019-03-01 09:30:10   
+
+   delay_minutes    status            line        type  
+0       0.000000  departed  Raritan Valley  NJ Transit  
+1       1.083333  departed  Raritan Valley  NJ Transit  
+2       3.483333  departed  Raritan Valley  NJ Transit  
+3       3.016667  departed  Raritan Valley  NJ Transit  
+4       3.166667  departed  Raritan Valley  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_04.csv:
+          date train_id  stop_sequence         from  from_id             to  \
+0  2019-04-01     4393            1.0  Long Branch       74    Long Branch   
+1  2019-04-01     4393            2.0  Long Branch       74        Elberon   
+2  2019-04-01     4393            3.0      Elberon       40     Allenhurst   
+3  2019-04-01     4393            4.0   Allenhurst        4    Asbury Park   
+4  2019-04-01     4393            5.0  Asbury Park        8  Bradley Beach   
+
+   to_id       scheduled_time          actual_time  delay_minutes    status  \
+0     74  2019-04-02 00:08:00  2019-04-02 00:07:06       0.000000  departed   
+1     40  2019-04-02 00:12:00  2019-04-02 00:13:09       1.150000  departed   
+2      4  2019-04-02 00:16:00  2019-04-02 00:18:07       2.116667  departed   
+3      8  2019-04-02 00:20:00  2019-04-02 00:21:12       1.200000  departed   
+4     22  2019-04-02 00:23:00  2019-04-02 00:23:10       0.166667  departed   
+
+              line        type  
+0  No Jersey Coast  NJ Transit  
+1  No Jersey Coast  NJ Transit  
+2  No Jersey Coast  NJ Transit  
+3  No Jersey Coast  NJ Transit  
+4  No Jersey Coast  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_05.csv:
+          date train_id  stop_sequence                   from  from_id  \
+0  2019-05-01     3251            1.0  New York Penn Station    105.0   
+1  2019-05-01     3251            2.0  New York Penn Station    105.0   
+2  2019-05-01     3251            3.0     Secaucus Upper Lvl  38187.0   
+3  2019-05-01     3251            4.0    Newark Penn Station    107.0   
+4  2019-05-01     3251            5.0         Newark Airport  37953.0   
+
+                      to    to_id       scheduled_time          actual_time  \
+0  New York Penn Station    105.0  2019-05-01 14:46:00  2019-05-01 14:45:10   
+1     Secaucus Upper Lvl  38187.0  2019-05-01 14:56:00  2019-05-01 14:56:21   
+2    Newark Penn Station    107.0  2019-05-01 15:05:00  2019-05-01 15:05:24   
+3         Newark Airport  37953.0  2019-05-01 15:10:00  2019-05-01 15:13:08   
+4                 Rahway    127.0  2019-05-01 15:21:00  2019-05-01 15:23:07   
+
+   delay_minutes    status             line        type  
+0       0.000000  departed  No Jersey Coast  NJ Transit  
+1       0.350000  departed  No Jersey Coast  NJ Transit  
+2       0.400000  departed  No Jersey Coast  NJ Transit  
+3       3.133333  departed  No Jersey Coast  NJ Transit  
+4       2.116667  departed  No Jersey Coast  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_06.csv:
+          date train_id  stop_sequence         from  from_id             to  \
+0  2019-06-01     4773            1.0  Long Branch     74.0    Long Branch   
+1  2019-06-01     4773            2.0  Long Branch     74.0        Elberon   
+2  2019-06-01     4773            3.0      Elberon     40.0     Allenhurst   
+3  2019-06-01     4773            4.0   Allenhurst      4.0    Asbury Park   
+4  2019-06-01     4773            5.0  Asbury Park      8.0  Bradley Beach   
+
+   to_id       scheduled_time          actual_time  delay_minutes    status  \
+0   74.0  2019-06-01 21:46:00  2019-06-01 21:45:18       0.000000  departed   
+1   40.0  2019-06-01 21:50:00  2019-06-01 21:58:08       8.133333  departed   
+2    4.0  2019-06-01 21:54:00  2019-06-01 22:02:29       8.483333  departed   
+3    8.0  2019-06-01 21:58:00  2019-06-01 22:06:06       8.100000  departed   
+4   22.0  2019-06-01 22:01:00  2019-06-01 22:09:07       8.116667  departed   
+
+              line        type  
+0  No Jersey Coast  NJ Transit  
+1  No Jersey Coast  NJ Transit  
+2  No Jersey Coast  NJ Transit  
+3  No Jersey Coast  NJ Transit  
+4  No Jersey Coast  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_07.csv:
+          date train_id  stop_sequence                from  from_id  \
+0  2019-07-01     3810            1.0             Trenton    148.0   
+1  2019-07-01     3810            2.0             Trenton    148.0   
+2  2019-07-01     3810            3.0            Hamilton  32905.0   
+3  2019-07-01     3810            4.0  Princeton Junction    125.0   
+4  2019-07-01     3810            5.0       New Brunswick    103.0   
+
+                   to    to_id       scheduled_time          actual_time  \
+0             Trenton    148.0  2019-07-01 04:56:00  2019-07-01 04:58:46   
+1            Hamilton  32905.0  2019-07-01 05:02:00  2019-07-01 05:02:29   
+2  Princeton Junction    125.0  2019-07-01 05:09:00  2019-07-01 05:10:59   
+3       New Brunswick    103.0  2019-07-01 05:23:00  2019-07-01 05:27:33   
+4              Edison     38.0  2019-07-01 05:28:00  2019-07-01 05:31:46   
+
+   delay_minutes    status              line        type  
+0       2.766667  departed  Northeast Corrdr  NJ Transit  
+1       0.483333  departed  Northeast Corrdr  NJ Transit  
+2       1.983333  departed  Northeast Corrdr  NJ Transit  
+3       4.550000  departed  Northeast Corrdr  NJ Transit  
+4       3.766667  departed  Northeast Corrdr  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_08.csv:
+          date train_id  stop_sequence           from  from_id  \
+0  2019-08-01     6676            1.0          Dover     35.0   
+1  2019-08-01     6676            2.0          Dover     35.0   
+2  2019-08-01     6676            3.0       Denville     34.0   
+3  2019-08-01     6676            4.0  Morris Plains     91.0   
+4  2019-08-01     6676            5.0     Morristown     92.0   
+
+                to  to_id       scheduled_time          actual_time  \
+0            Dover   35.0  2019-08-01 21:32:00  2019-08-01 21:40:10   
+1         Denville   34.0  2019-08-01 21:40:00  2019-08-01 21:49:35   
+2    Morris Plains   91.0  2019-08-01 21:47:00  2019-08-01 21:56:10   
+3       Morristown   92.0  2019-08-01 21:51:00  2019-08-01 22:00:14   
+4  Convent Station   30.0  2019-08-01 21:55:00  2019-08-01 22:04:27   
+
+   delay_minutes    status             line        type  
+0       8.166667  departed  Morristown Line  NJ Transit  
+1       9.583333  departed  Morristown Line  NJ Transit  
+2       9.166667  departed  Morristown Line  NJ Transit  
+3       9.233333  departed  Morristown Line  NJ Transit  
+4       9.450000  departed  Morristown Line  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_09.csv:
+          date train_id  stop_sequence                from  from_id  \
+0  2019-09-01     7824            1.0             Trenton    148.0   
+1  2019-09-01     7824            2.0             Trenton    148.0   
+2  2019-09-01     7824            3.0            Hamilton  32905.0   
+3  2019-09-01     7824            4.0  Princeton Junction    125.0   
+4  2019-09-01     7824            5.0       New Brunswick    103.0   
+
+                   to    to_id       scheduled_time          actual_time  \
+0             Trenton    148.0  2019-09-01 09:59:00  2019-09-01 10:00:10   
+1            Hamilton  32905.0  2019-09-01 10:05:00  2019-09-01 10:04:10   
+2  Princeton Junction    125.0  2019-09-01 10:12:00  2019-09-01 10:12:01   
+3       New Brunswick    103.0  2019-09-01 10:29:00  2019-09-01 10:31:05   
+4              Edison     38.0  2019-09-01 10:34:00  2019-09-01 10:37:40   
+
+   delay_minutes    status              line        type  
+0       1.166667  departed  Northeast Corrdr  NJ Transit  
+1       0.000000  departed  Northeast Corrdr  NJ Transit  
+2       0.016667  departed  Northeast Corrdr  NJ Transit  
+3       2.083333  departed  Northeast Corrdr  NJ Transit  
+4       3.666667  departed  Northeast Corrdr  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_10.csv:
+          date train_id  stop_sequence                 from  from_id  \
+0  2019-10-01     5749            1.0  Newark Penn Station    107.0   
+1  2019-10-01     5749            2.0  Newark Penn Station    107.0   
+2  2019-10-01     5749            3.0                Union  38105.0   
+3  2019-10-01     5749            4.0         Roselle Park     31.0   
+4  2019-10-01     5749            5.0             Cranford     32.0   
+
+                    to    to_id       scheduled_time          actual_time  \
+0  Newark Penn Station    107.0  2019-10-01 19:35:00  2019-10-01 19:34:06   
+1                Union  38105.0  2019-10-01 19:44:00  2019-10-01 19:49:04   
+2         Roselle Park     31.0  2019-10-01 19:48:00  2019-10-01 19:54:05   
+3             Cranford     32.0  2019-10-01 19:52:00  2019-10-01 19:59:04   
+4            Westfield    155.0  2019-10-01 19:56:00  2019-10-01 20:03:08   
+
+   delay_minutes    status            line        type  
+0       0.000000  departed  Raritan Valley  NJ Transit  
+1       5.066667  departed  Raritan Valley  NJ Transit  
+2       6.083333  departed  Raritan Valley  NJ Transit  
+3       7.066667  departed  Raritan Valley  NJ Transit  
+4       7.133333  departed  Raritan Valley  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_11.csv:
+          date train_id  stop_sequence          from  from_id  \
+0  2019-11-01     4118            1.0     Princeton    124.0   
+1  2019-11-01     4118            2.0     Princeton    124.0   
+2  2019-11-01    A2172            NaN  Philadelphia      1.0   
+3  2019-11-01    A2172            NaN  Philadelphia      1.0   
+4  2019-11-01    A2172            NaN     Metropark     83.0   
+
+                    to  to_id       scheduled_time          actual_time  \
+0            Princeton  124.0  2019-11-01 07:50:00  2019-11-01 07:48:13   
+1   Princeton Junction  125.0  2019-11-01 07:55:00  2019-11-01 07:48:13   
+2         Philadelphia    1.0                  NaN  2019-11-01 17:31:06   
+3            Metropark   83.0                  NaN  2019-11-01 18:21:11   
+4  Newark Penn Station  107.0                  NaN  2019-11-01 18:36:26   
+
+   delay_minutes     status               line        type  
+0            0.0  cancelled  Princeton Shuttle  NJ Transit  
+1            0.0  cancelled  Princeton Shuttle  NJ Transit  
+2            NaN   departed      ACELA EXPRESS      Amtrak  
+3            NaN   departed      ACELA EXPRESS      Amtrak  
+4            NaN   departed      ACELA EXPRESS      Amtrak  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2019_12.csv:
+          date train_id  stop_sequence        from  from_id  \
+0  2019-12-01     4244            1.0   Princeton    124.0   
+1  2019-12-01     4244            2.0   Princeton    124.0   
+2  2019-12-01     5534            1.0     Raritan    129.0   
+3  2019-12-01     5534            2.0     Raritan    129.0   
+4  2019-12-01     5534            3.0  Somerville    138.0   
+
+                   to  to_id       scheduled_time          actual_time  \
+0           Princeton  124.0  2019-12-01 15:23:00  2019-12-01 15:23:11   
+1  Princeton Junction  125.0  2019-12-01 15:28:00  2019-12-01 15:28:00   
+2             Raritan  129.0  2019-12-01 20:16:00  2019-12-01 20:21:06   
+3          Somerville  138.0  2019-12-01 20:19:00  2019-12-01 20:22:02   
+4         Bridgewater   24.0  2019-12-01 20:23:00  2019-12-01 20:28:27   
+
+   delay_minutes     status               line        type  
+0       0.183333   departed  Princeton Shuttle  NJ Transit  
+1       0.000000  estimated  Princeton Shuttle  NJ Transit  
+2       5.100000   departed     Raritan Valley  NJ Transit  
+3       3.033333   departed     Raritan Valley  NJ Transit  
+4       5.450000   departed     Raritan Valley  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2020_01.csv:
+          date train_id  stop_sequence                 from  from_id  \
+0  2020-01-01     0539            1.0              Hoboken     63.0   
+1  2020-01-01     0539            2.0              Hoboken     63.0   
+2  2020-01-01     0539            3.0  Newark Broad Street    106.0   
+3  2020-01-01     0539            4.0    Watsessing Avenue    154.0   
+4  2020-01-01     0539            5.0           Bloomfield     19.0   
+
+                    to  to_id       scheduled_time          actual_time  \
+0              Hoboken   63.0  2020-01-01 20:08:00  2020-01-01 20:09:11   
+1  Newark Broad Street  106.0  2020-01-01 20:26:00  2020-01-01 20:31:03   
+2    Watsessing Avenue  154.0  2020-01-01 20:38:00  2020-01-01 20:40:26   
+3           Bloomfield   19.0  2020-01-01 20:40:00  2020-01-01 20:42:04   
+4           Glen Ridge   50.0  2020-01-01 20:43:00  2020-01-01 20:46:12   
+
+   delay_minutes    status               line        type  
+0       1.183333  departed  Montclair-Boonton  NJ Transit  
+1       5.050000  departed  Montclair-Boonton  NJ Transit  
+2       2.433333  departed  Montclair-Boonton  NJ Transit  
+3       2.066667  departed  Montclair-Boonton  NJ Transit  
+4       3.200000  departed  Montclair-Boonton  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2020_02.csv:
+          date train_id  stop_sequence            from  from_id  \
+0  2020-02-01     A160            NaN    Philadelphia      1.0   
+1  2020-02-01     A160            NaN    Philadelphia      1.0   
+2  2020-02-01     A160            NaN         Trenton    148.0   
+3  2020-02-01     A160            NaN       Metropark     83.0   
+4  2020-02-01     A160            NaN  Newark Airport  37953.0   
+
+                    to    to_id scheduled_time          actual_time  \
+0         Philadelphia      1.0            NaN  2020-02-01 07:20:06   
+1              Trenton    148.0            NaN  2020-02-01 07:54:19   
+2            Metropark     83.0            NaN  2020-02-01 08:18:34   
+3       Newark Airport  37953.0            NaN  2020-02-01 08:29:08   
+4  Newark Penn Station    107.0            NaN  2020-02-01 08:35:09   
+
+   delay_minutes    status    line    type  
+0            NaN  departed  Amtrak  Amtrak  
+1            NaN  departed  Amtrak  Amtrak  
+2            NaN  departed  Amtrak  Amtrak  
+3            NaN  departed  Amtrak  Amtrak  
+4            NaN  departed  Amtrak  Amtrak  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2020_03.csv:
+          date train_id  stop_sequence                from  from_id  \
+0  2020-03-01     1837            1.0             Hoboken       63   
+1  2020-03-01     1837            2.0             Hoboken       63   
+2  2020-03-01     1837            3.0  Secaucus Lower Lvl    38174   
+3  2020-03-01     1837            4.0           Kingsland       66   
+4  2020-03-01     1837            5.0           Lyndhurst       75   
+
+                   to  to_id       scheduled_time          actual_time  \
+0             Hoboken     63  2020-03-01 22:15:00  2020-03-01 22:16:06   
+1  Secaucus Lower Lvl  38174  2020-03-01 22:25:00  2020-03-01 22:26:04   
+2           Kingsland     66  2020-03-01 22:31:00  2020-03-01 22:33:37   
+3           Lyndhurst     75  2020-03-01 22:34:00  2020-03-01 22:35:04   
+4           Delawanna     33  2020-03-01 22:36:00  2020-03-01 22:38:01   
+
+   delay_minutes    status       line        type  
+0       1.100000  departed  Main Line  NJ Transit  
+1       1.066667  departed  Main Line  NJ Transit  
+2       2.616667  departed  Main Line  NJ Transit  
+3       1.066667  departed  Main Line  NJ Transit  
+4       2.016667  departed  Main Line  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2020_04.csv:
+          date train_id  stop_sequence           from  from_id             to  \
+0  2020-04-01     9600            NaN  Spring Valley      142  Spring Valley   
+1  2020-04-01     9600            NaN  Spring Valley      142         Nanuet   
+2  2020-04-01     9600            NaN         Nanuet      100    Pearl River   
+3  2020-04-01     9600            NaN    Pearl River      118       Montvale   
+4  2020-04-01     9600            NaN       Montvale       90     Park Ridge   
+
+   to_id scheduled_time          actual_time  delay_minutes    status  \
+0    142            NaN  2020-04-01 06:09:12            NaN  departed   
+1    100            NaN  2020-04-01 06:18:17            NaN  departed   
+2    118            NaN  2020-04-01 06:23:03            NaN  departed   
+3     90            NaN  2020-04-01 06:24:06            NaN  departed   
+4    114            NaN  2020-04-01 06:27:08            NaN  departed   
+
+             line        type  
+0  Pascack Valley  NJ Transit  
+1  Pascack Valley  NJ Transit  
+2  Pascack Valley  NJ Transit  
+3  Pascack Valley  NJ Transit  
+4  Pascack Valley  NJ Transit  
+Data from C:/Users/hblin/OneDrive - Cal Poly/GSB 544/Project/nj_trains\2020_05.csv:
+          date train_id  stop_sequence                 from  from_id  \
+0  2020-05-01     5543            1.0  Newark Penn Station      107   
+1  2020-05-01     5543            2.0  Newark Penn Station      107   
+2  2020-05-01     5543            3.0                Union    38105   
+3  2020-05-01     5543            4.0         Roselle Park       31   
+4  2020-05-01     5543            5.0             Cranford       32   
+
+                    to  to_id       scheduled_time          actual_time  \
+0  Newark Penn Station    107  2020-05-01 23:38:00  2020-05-01 23:40:09   
+1                Union  38105  2020-05-01 23:47:00  2020-05-01 23:47:01   
+2         Roselle Park     31  2020-05-01 23:50:00  2020-05-01 23:51:04   
+3             Cranford     32  2020-05-01 23:55:00  2020-05-01 23:55:31   
+4            Westfield    155  2020-05-01 23:59:00  2020-05-01 23:59:01   
+
+   delay_minutes    status            line        type  
+0       2.150000  departed  Raritan Valley  NJ Transit  
+1       0.016667  departed  Raritan Valley  NJ Transit  
+2       1.066667  departed  Raritan Valley  NJ Transit  
+3       0.516667  departed  Raritan Valley  NJ Transit  
+4       0.016667  departed  Raritan Valley  NJ Transit  </code></pre>
+</div>
+</div>
+<div id="cell-12" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine all DataFrames into one</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>combined_df <span class="op">=</span> pd.concat(dataframes.values(), ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the resulting combined DataFrame</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_df.head())</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Combined DataFrame has </span><span class="sc">{</span>combined_df<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> rows and </span><span class="sc">{</span>combined_df<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> columns."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         date train_id  stop_sequence                   from  from_id  \
+0  2018-03-01     3805            1.0  New York Penn Station    105.0   
+1  2018-03-01     3805            2.0  New York Penn Station    105.0   
+2  2018-03-01     3805            3.0     Secaucus Upper Lvl  38187.0   
+3  2018-03-01     3805            4.0    Newark Penn Station    107.0   
+4  2018-03-01     3805            5.0         Newark Airport  37953.0   
+
+                      to    to_id       scheduled_time          actual_time  \
+0  New York Penn Station    105.0  2018-03-02 01:22:00  2018-03-02 01:21:05   
+1     Secaucus Upper Lvl  38187.0  2018-03-02 01:31:00  2018-03-02 01:31:08   
+2    Newark Penn Station    107.0  2018-03-02 01:40:00  2018-03-02 01:40:07   
+3         Newark Airport  37953.0  2018-03-02 01:45:00  2018-03-02 01:45:10   
+4        North Elizabeth    109.0  2018-03-02 01:49:00  2018-03-02 01:49:10   
+
+   delay_minutes    status              line        type  
+0       0.000000  departed  Northeast Corrdr  NJ Transit  
+1       0.133333  departed  Northeast Corrdr  NJ Transit  
+2       0.116667  departed  Northeast Corrdr  NJ Transit  
+3       0.166667  departed  Northeast Corrdr  NJ Transit  
+4       0.166667  departed  Northeast Corrdr  NJ Transit  
+Combined DataFrame has 6346414 rows and 13 columns.</code></pre>
+</div>
+</div>
+<div id="cell-13" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>nj_trains <span class="op">=</span> combined_df.dropna()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-14" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>nj_trains[<span class="st">'Year'</span>] <span class="op">=</span> nj_trains[<span class="st">'date'</span>].dt.year</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>nj_trains[<span class="st">'Month'</span>] <span class="op">=</span> nj_trains[<span class="st">'date'</span>].dt.month_name()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\hblin\AppData\Local\Temp\ipykernel_43384\3079033934.py:1: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  nj_trains['Year'] = nj_trains['date'].dt.year
+C:\Users\hblin\AppData\Local\Temp\ipykernel_43384\3079033934.py:2: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  nj_trains['Month'] = nj_trains['date'].dt.month_name()</code></pre>
+</div>
+</div>
+<div id="cell-15" class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>train_rain <span class="op">=</span> pd.merge(nj_trains, nj_rain, on<span class="op">=</span>[<span class="st">'Year'</span>, <span class="st">'Month'</span>], how<span class="op">=</span><span class="st">'left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-16" class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>train_rain <span class="op">=</span> train_rain.drop([<span class="st">'from_id'</span>,<span class="st">'to_id'</span>,<span class="st">'type'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-17" class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>train_rain[<span class="st">'day_of_week'</span>] <span class="op">=</span> train_rain[<span class="st">'date'</span>].dt.dayofweek</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-18" class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>train_rain[<span class="st">'line'</span>].value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="55">
+<pre><code>line
+Northeast Corrdr     954199
+Morristown Line      920492
+No Jersey Coast      878390
+Main Line            549268
+Bergen Co. Line      509793
+Gladstone Branch     508315
+Montclair-Boonton    487254
+Raritan Valley       426195
+Pascack Valley       364703
+Atl. City Line       102753
+Princeton Shuttle     58202
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+</section>
+<section id="summary-visualizations" class="level2">
+<h2 class="anchored" data-anchor-id="summary-visualizations">Summary Visualizations</h2>
+<div id="cell-20" class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>plt.hist(nj_trains, bins<span class="op">=</span><span class="dv">20</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add labels and title</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'delay_minutes'</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Histogram'</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-21" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> nj_trains.sample(frac<span class="op">=</span><span class="fl">0.1</span>, random_state<span class="op">=</span><span class="dv">52</span>)  <span class="co"># 1% sample</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-22" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>plt.hist(nj_trains[<span class="st">'delay_minutes'</span>], bins<span class="op">=</span><span class="dv">100</span>, color<span class="op">=</span><span class="st">'blue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add labels and title</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'delay_minutes'</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Histogram'</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-23" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>nj_trains.loc[:, <span class="st">'date'</span>] <span class="op">=</span> pd.to_datetime(nj_trains[<span class="st">'date'</span>], errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>nj_trains.loc[:, <span class="st">'scheduled_time'</span>] <span class="op">=</span> pd.to_datetime(nj_trains[<span class="st">'scheduled_time'</span>], errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>nj_trains.loc[:, <span class="st">'actual_time'</span>] <span class="op">=</span> pd.to_datetime(nj_trains[<span class="st">'actual_time'</span>], errors<span class="op">=</span><span class="st">'coerce'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-24" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(nj_trains[<span class="st">'delay_minutes'</span>].groupby(nj_trains[<span class="st">'line'</span>]).median())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>line
+Atl. City Line       2.083333
+Bergen Co. Line      2.216667
+Gladstone Branch     2.133333
+Main Line            3.016667
+Montclair-Boonton    3.000000
+Morristown Line      2.416667
+No Jersey Coast      3.033333
+Northeast Corrdr     2.183333
+Pascack Valley       2.200000
+Princeton Shuttle    0.000000
+Raritan Valley       2.266667
+Name: delay_minutes, dtype: float64</code></pre>
+</div>
+</div>
+<div id="cell-25" class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>plt.hist(nj_trains[<span class="st">'delay_minutes'</span>], bins<span class="op">=</span><span class="dv">100</span>, color<span class="op">=</span><span class="st">'blue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add labels and title</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'delay_minutes'</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequency'</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Histogram'</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-26" class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.plot( <span class="st">'x'</span>, <span class="st">'y'</span>, <span class="st">""</span>, data<span class="op">=</span>df, linestyle<span class="op">=</span><span class="st">''</span>, marker<span class="op">=</span><span class="st">'o'</span>, alpha <span class="op">=</span> <span class="fl">0.7</span>, markersize<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Value of X'</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Value of Y'</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Overplotting? Try to reduce the dot size'</span>, loc<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-27" class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>X<span class="op">=</span> train_rain[[<span class="st">"day_of_week"</span>, <span class="st">'Rainfall'</span>, <span class="st">"line"</span>]]</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>y<span class="op">=</span> train_rain[<span class="st">"delay_minutes"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="models" class="level2">
+<h2 class="anchored" data-anchor-id="models">Models</h2>
+<div id="cell-29" class="cell" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ct <span class="op">=</span> ColumnTransformer(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  [</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"dummify"</span>, </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    OneHotEncoder(sparse_output <span class="op">=</span> <span class="va">False</span>, handle_unknown<span class="op">=</span><span class="st">'ignore'</span>),</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    make_column_selector(dtype_include<span class="op">=</span><span class="bu">object</span>)),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"standardize"</span>, </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    StandardScaler(), </span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    make_column_selector(dtype_include<span class="op">=</span>np.number))</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  ],</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  remainder <span class="op">=</span> <span class="st">"passthrough"</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>).set_output(transform<span class="op">=</span> <span class="st">"pandas"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-30" class="cell" data-execution_count="72">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ridge model</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>lr_pipeline_1 <span class="op">=</span> Pipeline(</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  [(<span class="st">"preprocessing"</span>, ct),</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  (<span class="st">"ridge_regression"</span>, Ridge(alpha<span class="op">=</span> <span class="dv">1</span>))]</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>X_transformed <span class="op">=</span> ct.fit_transform(X)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>lr_pipeline_1.fit(X, y)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> lr_pipeline_1.predict(X)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> r2_score(y, y_pred)</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"r^2: </span><span class="sc">{</span>r2<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>cross_val_r2 <span class="op">=</span> cross_val_score(lr_pipeline_1, X, y, cv<span class="op">=</span>KFold(n_splits<span class="op">=</span><span class="dv">5</span>), scoring<span class="op">=</span><span class="st">'r2'</span>).mean()</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Cross Val r^2: </span><span class="sc">{</span>cross_val_r2<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>ridge_model <span class="op">=</span> Ridge(alpha<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>ridge_model.fit(X_transformed, y)</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Intercept:"</span>, ridge_model.intercept_)</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co">#print("Coefficients:", ridge_model.coef_)</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>ridge_coefs <span class="op">=</span> ridge_model.coef_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>r^2: 0.03846854649992193
+Cross Val r^2: 0.00363013687491025
+Intercept: 4.449381861300066</code></pre>
+</div>
+</div>
+<div id="cell-31" class="cell" data-execution_count="71">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># OLS Pipeline</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>ols_pipeline <span class="op">=</span> Pipeline(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  [(<span class="st">"preprocessing"</span>, ct),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>   (<span class="st">"ols"</span>, LinearRegression())]  <span class="co"># Instantiate LinearRegression properly</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the model using the transformed features</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>ols_pipeline.fit(X, y)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions and evaluation</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> ols_pipeline.predict(X)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> r2_score(y, y_pred)</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"R^2: </span><span class="sc">{</span>r2<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Cross-validation using KFold for regression</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>cross_val_r2 <span class="op">=</span> cross_val_score(ols_pipeline, X, y, cv<span class="op">=</span>KFold(n_splits<span class="op">=</span><span class="dv">5</span>), scoring<span class="op">=</span><span class="st">'r2'</span>).mean()</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Cross Val R^2: </span><span class="sc">{</span>cross_val_r2<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R^2: 0.0384684567375464
+Cross Val R^2: -357697677764669.7</code></pre>
+</div>
+</div>
+<div id="cell-32" class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Group data by 'year'</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>years <span class="op">=</span> train_rain[<span class="st">'Year'</span>].unique()  <span class="co"># Get unique years</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [train_rain[train_rain[<span class="st">'Year'</span>] <span class="op">==</span> year][<span class="st">'delay_minutes'</span>] <span class="cf">for</span> year <span class="kw">in</span> years]</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the boxplot</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>plt.boxplot(data, patch_artist<span class="op">=</span><span class="va">True</span>, showmeans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Customize the plot</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Boxplot of Delay Minutes by Year"</span>)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Year"</span>)</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Delay Minutes"</span>)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>plt.xticks(ticks<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(years) <span class="op">+</span> <span class="dv">1</span>), labels<span class="op">=</span>years)  <span class="co"># Set year labels for x-axis</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.ylim([0,10])</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-33" class="cell" data-execution_count="82">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Group data by 'year'</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>years <span class="op">=</span> train_rain[<span class="st">'Year'</span>].unique()  <span class="co"># Get unique years</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [train_rain[train_rain[<span class="st">'Year'</span>] <span class="op">==</span> year][<span class="st">'delay_minutes'</span>] <span class="cf">for</span> year <span class="kw">in</span> years]</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the boxplot</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>plt.boxplot(data, patch_artist<span class="op">=</span><span class="va">True</span>, showmeans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Customize the plot</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Boxplot of Delay Minutes by Year"</span>)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Year"</span>)</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Delay Minutes"</span>)</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>plt.xticks(ticks<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(years) <span class="op">+</span> <span class="dv">1</span>), labels<span class="op">=</span>years)  <span class="co"># Set year labels for x-axis</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>plt.ylim([<span class="dv">0</span>,<span class="dv">10</span>])</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-29-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-34" class="cell" data-execution_count="87">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>line <span class="op">=</span> train_rain[<span class="st">'line'</span>].unique()  <span class="co"># Get unique years</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [train_rain[train_rain[<span class="st">'line'</span>] <span class="op">==</span> year][<span class="st">'delay_minutes'</span>] <span class="cf">for</span> year <span class="kw">in</span> years]</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the boxplot</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>plt.boxplot(data, patch_artist<span class="op">=</span><span class="va">True</span>, showmeans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Customize the plot</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Boxplot of Delay Minutes by Line"</span>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Line"</span>)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Delay Minutes"</span>)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>plt.xticks(ticks<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(line) <span class="op">+</span> <span class="dv">1</span>), labels<span class="op">=</span>years, rotation<span class="op">=</span> <span class="dv">45</span>)  <span class="co"># Set year labels for x-axis</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
